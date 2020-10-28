@@ -712,12 +712,15 @@ def draw_schem(input):
     f=d.fig
 
     return f
-  
+
+def save_figure(f,file_name,file_format):
+    f.savefig(file_name+"."+file_format,bbox_inches='tight')
+
+
 if __name__ == '__main__':
         
     f = draw_schem("X=AB*C+ab")
-    f.savefig("../tests/images/{}".format("test_k.pdf"), bbox_inches='tight')
-
+    save_figure(f,"image","pdf")
 
  
 
