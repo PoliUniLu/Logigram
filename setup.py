@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='Logigram',
+setup(name='logigram',
       version='0.0.1',
       description='Logic diagram drawer',
       url='https://github.com/ZuzanaSebb/Logigram',
