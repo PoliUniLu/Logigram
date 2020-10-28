@@ -707,7 +707,7 @@ def draw_schem(input):
     if not multi_output:
       f.sort(key=num_of_non_none)
     d=draw_boolean_func(f,variables,output_label,multi_value,multi_output)
-    #d.draw()
+    d.draw()
     f=d.fig
 
     return f
