@@ -719,8 +719,8 @@ def save_figure(f,file_name,file_format):
 
 if __name__ == '__main__':
         
-    f = draw_schem("X=AB*C+ab")
-    save_figure(f,"image","pdf")
+    f = draw_schem(["F1=A{1}*B{2}","F2=A{1}*B{2}+A{2}"])
+    save_figure(f,"/Users/zuzka/Documents/Logigram/examples/image4","svg")
 
  
 
