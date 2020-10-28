@@ -355,7 +355,6 @@ def print_gates(d,implicants,output_label,multi_value=False):
         LINE=d.add(elm.LINE,d='right')
         all_gates.append(LineWrapper(LINE,i))
       if(len(implicants)==1):
-        print("som tu")
         LINE=d.add(elm.LINE,d='right',l=d.unit)
         LINE.add_label(output_label,ofst=0.3,align=('left','bottom'))
         if(multi_value):
@@ -708,14 +707,13 @@ def draw_schem(input):
     if not multi_output:
       f.sort(key=num_of_non_none)
     d=draw_boolean_func(f,variables,output_label,multi_value,multi_output)
-    d.draw()
+    #d.draw()
     f=d.fig
 
     return f
 
 def save_figure(f,file_name,file_format):
     f.savefig(file_name+"."+file_format,bbox_inches='tight')
-
 
 if __name__ == '__main__':
         
