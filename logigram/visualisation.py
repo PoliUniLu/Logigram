@@ -13,8 +13,10 @@ INPUT_PATTERN2 = re.compile('^([^<\= ]+)(<\=>(.+))?$')
 
 
 def clean_input(input):
-  inputs=input.split('\n')
-  new_inputs=[''.join(filter(lambda x: not x.isspace() ,y)) for y in inputs]
+  if isinstance(input,str):
+      new_inputs=[''.join(c for c in input if not c.isspace())]
+  else:
+     new_inputs=[''.join(filter(lambda x: not x.isspace() ,y)) for y in input]
   parsed_functions=[x for x in new_inputs if len(x)!=0]
 
   return parsed_functions
@@ -212,7 +214,7 @@ class Implicants:
 
   def is_line(self):
     positive=0
-    print(self.implicant)
+    #print(self.implicant)
     for i in self.implicant:
       if i is not None:
         positive=positive+1
@@ -331,7 +333,7 @@ class LineWrapper(Implicants):
 def print_gates(d,implicants,output_label,multi_value=False):
   all_gates=[]
   for indx,i in enumerate(implicants.items() if isinstance(implicants, dict) else zip(implicants, [1]*len(implicants))):
-    print('i={}'.format(i)) 
+    #print('i={}'.format(i)) 
     if(multi_value is False):
       impl=Implicants(i)
     else:
@@ -342,6 +344,10 @@ def print_gates(d,implicants,output_label,multi_value=False):
       if(impl.is_line() is False):
           AND_GATE=d.add(impl.implicant_to_gate())
           all_gates.append(GateWrapper(AND_GATE,i,multi_value))
+      elif(impl.is_line() and len(implicants)==1):
+           Line=d.add(elm.LINE,d='right')
+           all_gates.append(LineWrapper(Line,i))
+              
       elif(multi_value is False and impl.is_neg_gate and len(implicants)==1):
           Not_gate=d.add(logic.NOT,d='right')
           all_gates.append(LineWrapper(Not_gate,i))
@@ -349,6 +355,7 @@ def print_gates(d,implicants,output_label,multi_value=False):
         LINE=d.add(elm.LINE,d='right')
         all_gates.append(LineWrapper(LINE,i))
       if(len(implicants)==1):
+        print("som tu")
         LINE=d.add(elm.LINE,d='right',l=d.unit)
         LINE.add_label(output_label,ofst=0.3,align=('left','bottom'))
         if(multi_value):
@@ -403,7 +410,7 @@ def initial_lines_printing(d,f,labels, all_gates):
   
   all_lines=[]
   ends=get_ends_line(labels,all_gates)
-  print(ends)
+  #print(ends)
   for i,line, last_gate in zip(range(len(labels)),labels,reversed(ends)):
     #rot=[0 if max(len(labels[i]))>1 for i in range(len(labels)),else 90]
     max_len=max([len(labels[i]) for i in range(len(labels))])
@@ -412,8 +419,8 @@ def initial_lines_printing(d,f,labels, all_gates):
     else:
       rot=0
     
-    print(rot)
-    print(rot)
+    #print(rot)
+    #print(rot)
     if(i==0):
      # L=d.add(elm.LINE,lftlabel=labels[l-i-1],
        L=d.add(elm.LINE,
@@ -645,8 +652,10 @@ class Mode(Enum):
 
 
 def get_mode(input):
-    inputs=input.split("\n")
-    new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in inputs]
+    if isinstance(input,str):
+        new_inputs=[''.join(c for c in input if not c.isspace())]
+    else:
+        new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in input]
     res=[x for x in new_inputs if len(x)!=0]
     res_new=[x.split("+") for x in res]
     if all(PATTERN1.match(s) is not None or PATTERN11.match(s) is not None for s in res):
@@ -668,7 +677,6 @@ def get_mode(input):
 
 def draw_schem(input):
     mode = get_mode(input)
-
     if mode==Mode.BOOLEAN_MODE:
       variables=get_the_variabels(input) 
       output_label=get_output_label(input)
@@ -683,7 +691,7 @@ def draw_schem(input):
       multi_value=True
       multi_output=False
     elif mode== Mode.MULTI_OUTPUT:
-      output_label=get_output_label(input.value)
+      output_label=get_output_label(input)
       variables=get_the_variabels(input,multi_output=True)
       f=create_implicants_multi_output(input,variables)
       multi_value=False
@@ -699,13 +707,17 @@ def draw_schem(input):
       return
     if not multi_output:
       f.sort(key=num_of_non_none)
-      d=draw_boolean_func(f,variables,output_label,multi_value,multi_output)
-      print('saving')
-      d.draw()
-      d.save('obr2.png')
+    d=draw_boolean_func(f,variables,output_label,multi_value,multi_output)
+    d.draw()
+    f=d.fig
+
+    return f
   
 if __name__ == '__main__':
-     draw_schem("X=A*B+c")
+        
+    f = draw_schem("X=AB*C+ab")
+    f.savefig("../tests/images/{}".format("test_k.pdf"), bbox_inches='tight')
+
 
  
 
