@@ -585,7 +585,7 @@ def print_ors(d,inputs,all_gates, labels):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], loc='out',rotation=rot)
+       GATE_OR.add_label(labels[j], loc='out',ofst=None, align=None, rotation=rot,lblsize=0.04)
      else:
      # Change this
        gate_or = elm.LINE #logic.orgate(nr_of_inputs,inputnots=neg_indexes)
@@ -593,14 +593,14 @@ def print_ors(d,inputs,all_gates, labels):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], align=('right','top'),rotation=rot)
+       GATE_OR.add_label(labels[j], loc='rgt',ofst=None, align=None, rotation=rot,lblsize=0.04)
    else:
      gate_or = logic.orgate(nr_of_inputs,inputnots=neg_indexes)
      GATE_OR=d.add(gate_or,d='up',anchor='out',
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )])
-     GATE_OR.add_label(labels[j], loc='out',rotation=rot)
+     GATE_OR.add_label(labels[j], loc='out',ofst=0.5, align=None, rotation=rot,lblsize=0.04)
    all_ors.append(OrWrapper(GATE_OR, all_gates_in_indxs=all_gates_in_idxs))
   return all_ors
 
@@ -723,8 +723,8 @@ def save_figure(f,file_name,file_format):
 
 if __name__ == '__main__':
         
-    f = draw_schem(["F1=A{1}*B{2}","F2=A{1}*B{2}+A{2}"])
-    save_figure(f,"/Users/zuzka/Documents/Logigram/examples/image4","svg")
+    f = draw_schem(["F1=A{1}*B{2}*C{0}+B{1}*C{1}+D{1}","F2=A{1}*B{2}*C{0}+D{1}"])
+    save_figure(f,"image00","pdf")
 
  
 
