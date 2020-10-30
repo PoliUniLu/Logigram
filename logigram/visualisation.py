@@ -556,6 +556,12 @@ class LineWrapper2:
     return self.__getattribute__(name)
 
 def print_ors(d,inputs,all_gates, labels):
+ 
+  max_len=max([len(labels[i]) for i in range(len(labels))])
+  if max_len>3:
+      rot=90
+  else:
+      rot=0 
   all_ors=[]
   func_idxs = set()
   for x in inputs.values():
@@ -579,7 +585,7 @@ def print_ors(d,inputs,all_gates, labels):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], loc='out')
+       GATE_OR.add_label(labels[j], loc='out',rotation=rot)
      else:
      # Change this
        gate_or = elm.LINE #logic.orgate(nr_of_inputs,inputnots=neg_indexes)
@@ -587,14 +593,14 @@ def print_ors(d,inputs,all_gates, labels):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], align=('right','top'))
+       GATE_OR.add_label(labels[j], align=('right','top'),rotation=rot)
    else:
      gate_or = logic.orgate(nr_of_inputs,inputnots=neg_indexes)
      GATE_OR=d.add(gate_or,d='up',anchor='out',
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )])
-     GATE_OR.add_label(labels[j], loc='out')
+     GATE_OR.add_label(labels[j], loc='out',rotation=rot)
    all_ors.append(OrWrapper(GATE_OR, all_gates_in_indxs=all_gates_in_idxs))
   return all_ors
 
