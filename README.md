@@ -2,6 +2,9 @@
  Logigram is a Python library for drawing a simple logic circuits.
 
 ## Description
+Logic diagrams are a tool for the visualization of Boolean-algebraic structures. 
+Indeed, one can visualise  any booelan function in disjunctive normal form (DNF) (i.e. disjunctions of elementary conjunctions).
+This directly implies, that the corresponding diagram will consist only of  AND and OR operations. This package was developed as an essenciall part of a python package CORA containing set of functions for Qualitative Comparative Analysis. 
 
 ## Installation
  
