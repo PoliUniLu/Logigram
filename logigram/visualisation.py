@@ -645,8 +645,8 @@ def draw_boolean_func(f, variables,output_label,multi_value,multi_output):
 
 
 PATTERN1=re.compile('^([^=]+=)?(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)$')
-PATTERN11=re.compile('^(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<=>[a-zA-Z0-9_]+)?$')
-PATTERN22=re.compile('^([^=]+=)?(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<=>[a-zA-Z0-9_]+)?$')
+PATTERN11=re.compile('^(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<=>[^<\=>]+)?$')
+PATTERN22=re.compile('^([^=]+=)?(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<=>[^<\=>]+)?$')
 
 class Mode(Enum):
   BOOLEAN_MODE = 1
@@ -723,7 +723,7 @@ def save_figure(f,file_name,file_format):
 
 if __name__ == '__main__':
         
-    f = draw_schem(["F1=A{1}*B{2}*C{0}+B{1}*C{1}+D{1}","F2=A{1}*B{2}*C{0}+D{1}"])
+    f = draw_schem(["B+c<=>X{1}"])
     save_figure(f,"image00","pdf")
 
  
