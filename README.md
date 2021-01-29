@@ -1,5 +1,5 @@
 # Logigram
- Logigram is a Python library for drawing a simple logic circuits.
+ Logigram is a Python library for drawing logic diagrams.
 
 ## Description
 Logic diagrams are used for visualizing Boolean structures.
@@ -15,7 +15,7 @@ causal structures.
 
 ## Installation
  
- Use the package manager [pip](https://pip.pypa.io/en/stable/) to install logigram.
+ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install LOGIGRAM.
   
   ```bash
   pip install logigram
@@ -24,12 +24,17 @@ causal structures.
 ## Usage
  
  ```python
-  import logigram
-  f = logigram.draw_schem('F=A*B+c*A+b') # returns a matplotlib figure 
-  # for multiple functions input
+  import LOGIGRAM
+  
+  # returns a matplotlib figure
+  f = logigram.draw_schem('F=A*B+c*A+b') 
+  
+  # for multi-output functions
   f = logigram.draw_schem(['F1=A*B+c*A+b','F2=A*B']) 
-  # non-binary/multi value input
+  
+  # usage with multivalent factors
   f = logigram.draw_schem('F=A{1}*B{2}+C{0}')
+  
   # save the figure 
   save_figure("image","svg")
   ```
@@ -41,7 +46,3 @@ causal structures.
   ![Ex. of a multi-value function in a CDNF](examples/image3.svg)
   
   ![Ex. of the two multi-value fucntions i a CDNF](examples/image4.svg)
-
-  
-  
-"README.md" 26L, 438C
