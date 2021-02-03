@@ -641,7 +641,7 @@ def draw_boolean_func(f, variables,output_label,multi_value,multi_output):
 
 
 PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
-PATTERN22 = re.compile('(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
 
 
 #PATTERN1=re.compile('^([^=]+=)?(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)$')
@@ -662,15 +662,17 @@ def get_mode(input):
     else:
         new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in input]
     res=[x for x in new_inputs if len(x)!=0]
-    res_new=[x.split("+") for x in res]
+    #print(res)
+    #res_new=[x.split("+") for x in res]
     if all(PATTERN11.match(s) is not None for s in res):
         if len(res)>1:
             return Mode.MULTI_OUTPUT
         else:
             return Mode.BOOLEAN_MODE
-    for elem in res_new:
-      if all(PATTERN22.match(s) is not None for s in elem):
-        if len(res_new)>1:
+    #for elem in res_new:
+     # print(res_new)
+    elif all(PATTERN22.match(s) is not None for s in res):
+        if len(res)>1:
           return  Mode.MUTLI_VALUE_MULTI_OUT
         else:
           return Mode.MULTI_VALUE_MODE
@@ -723,7 +725,7 @@ def save_figure(f,file_name,file_format):
 
 if __name__ == '__main__':
         
-    f = draw_schem(["C+B <=> X{1,2}","a <=> Y"])
+    f = draw_schem(["S{1}*A{2}+K{4}<=>ALONE{0}","S{1}*A{2}+K{1}*T{4}<=>ALONE{0}"])
 
  
 
