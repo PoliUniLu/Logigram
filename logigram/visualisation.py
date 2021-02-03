@@ -6,10 +6,8 @@ import re
 from enum import Enum
 #%matplotlib inline
 
-#%config InlineBackend.figure_format = 'svg'
 
-INPUT_PATTERN1 = re.compile('^(([^<\=]+)\=)?([^<\=]+)$')
-INPUT_PATTERN2 = re.compile('^([^<\= ]+)(<\=>(.+))?$')
+INPUT_PATTERN2 = re.compile('^([^<\= >]+)(<*\=>*(.+))$')
 
 
 def clean_input(input):
@@ -25,9 +23,9 @@ def create_implicant_string(input):
  inputs=clean_input(input)
  result=set()
  for f in inputs:
-   if INPUT_PATTERN1.match(f) is not None:
-      result.update( INPUT_PATTERN1.match(f).group(3).split("+"))
-   elif INPUT_PATTERN2.match(f) is not None:
+   #if INPUT_PATTERN1.match(f) is not None:
+     # result.update( INPUT_PATTERN1.match(f).group(3).split("+"))
+   if INPUT_PATTERN2.match(f) is not None:
       result.update( INPUT_PATTERN2.match(f).group(1).split("+"))
    else:
     pass
@@ -39,9 +37,9 @@ def get_the_variabels(f,multi_output=False,multi_value=False):
     result=create_implicant_string(f)
   else:
     f_new=clean_input(f)
-    if INPUT_PATTERN1.match(f_new[0]) is not None:
-       result = INPUT_PATTERN1.match(f_new[0]).group(3)
-    elif INPUT_PATTERN2.match(f_new[0]) is not None:
+    #if INPUT_PATTERN1.match(f_new[0]) is not None:
+     #  result = INPUT_PATTERN1.match(f_new[0]).group(3)
+    if INPUT_PATTERN2.match(f_new[0]) is not None:
       result = INPUT_PATTERN2.match(f_new[0]).group(1)
     else:
       pass
@@ -62,9 +60,9 @@ def get_output_label(f):
     functions=clean_input(f)
     res=[]
     for f in functions:
-      if INPUT_PATTERN1.match(f) is not None:
-        res.append(INPUT_PATTERN1.match(f).group(2))
-      elif INPUT_PATTERN2.match(f) is not None:
+      #if INPUT_PATTERN1.match(f) is not None:
+       # res.append(INPUT_PATTERN1.match(f).group(2))
+      if INPUT_PATTERN2.match(f) is not None:
         res.append(INPUT_PATTERN2.match(f).group(3))
       else:
         pass
@@ -75,9 +73,9 @@ def create_multiple_functions(input):
   functions=clean_input(input)
   result=[]
   for f in functions:
-    if INPUT_PATTERN1.match(f) is not None:
-      result.append(INPUT_PATTERN1.match(f).group(3).split("+"))
-    elif INPUT_PATTERN2.match(f) is not None:
+    #if INPUT_PATTERN1.match(f) is not None:
+    #  result.append(INPUT_PATTERN1.match(f).group(3).split("+"))
+    if INPUT_PATTERN2.match(f) is not None:
       result.append(INPUT_PATTERN2.match(f).group(1).split("+"))
   return (result)
 
@@ -642,11 +640,13 @@ def draw_boolean_func(f, variables,output_label,multi_value,multi_output):
 
 
 
+PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN22 = re.compile('(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
 
 
-PATTERN1=re.compile('^([^=]+=)?(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)$')
-PATTERN11=re.compile('^(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<=>[^<\=>]+)?$')
-PATTERN22=re.compile('^([^=]+=)?(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<=>[^<\=>]+)?$')
+#PATTERN1=re.compile('^([^=]+=)?(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)$')
+#PATTERN11=re.compile('^(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<=>[^<\=>]+)?$')
+#PATTERN22=re.compile('^([^=]+=)?(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<=>[^<\=>]+)?$')
 
 class Mode(Enum):
   BOOLEAN_MODE = 1
@@ -663,7 +663,7 @@ def get_mode(input):
         new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in input]
     res=[x for x in new_inputs if len(x)!=0]
     res_new=[x.split("+") for x in res]
-    if all(PATTERN1.match(s) is not None or PATTERN11.match(s) is not None for s in res):
+    if all(PATTERN11.match(s) is not None for s in res):
         if len(res)>1:
             return Mode.MULTI_OUTPUT
         else:
@@ -708,8 +708,8 @@ def draw_schem(input):
       multi_value=True
       multi_output=True
     else:
-      print('Unsupported input entered.')
-      return
+      raise RuntimeError('Unsupported input entered.')
+      
     if not multi_output:
       f.sort(key=num_of_non_none)
     d=draw_boolean_func(f,variables,output_label,multi_value,multi_output)
@@ -723,11 +723,7 @@ def save_figure(f,file_name,file_format):
 
 if __name__ == '__main__':
         
-    f = draw_schem(["B+c<=>X{1}"])
-    save_figure(f,"image00","pdf")
+    f = draw_schem(["C+B <=> X{1,2}","a <=> Y"])
 
  
-
-
-
 
