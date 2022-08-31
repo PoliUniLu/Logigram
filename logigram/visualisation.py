@@ -720,8 +720,8 @@ def draw_schem(input):
 
     return f
 
-def save_figure(f,file_name,file_format):
-    f.savefig(file_name+"."+file_format,bbox_inches='tight')
+def save_figure(f,file_name,file_format,dpi=72):
+    f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
         
