@@ -46,3 +46,6 @@ causal structures.
   ![Ex. of a multi-value function in a CDNF](examples/image3.svg)
   
   ![Ex. of the two multi-value fucntions i a CDNF](examples/image4.svg)
+
+## License
+[![Open In License](https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/by-nc-sa.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
