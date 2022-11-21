@@ -16,8 +16,13 @@ import SchemDraw.elements as elm
 import re
 from enum import Enum
 
+
+
 # raw input
 INPUT_PATTERN2 = re.compile('^([^<\= >]+)(<*\=>*(.+))$')
+
+
+
 
 # clean input
 def clean_input(input):
@@ -692,6 +697,28 @@ def get_mode(input):
         return Mode.INVALID
 
 
+def replace_quote(match):
+    text = match.group()
+    if '\'' in text:
+
+        return text.replace('\'', '')
+    else:
+        return text.upper()
+
+
+def prime_to_nonprime(input):
+    regex = re.compile('([a-z-0-9]+\'*)')
+    new_input = []
+    for elm in input:
+        onset, offset = elm.split('=')
+        if ('\'' not in elm):
+            new_onset = onset.upper()
+        else:
+            new_onset = regex.sub(replace_quote, onset)
+        new_input.append(new_onset+"="+offset)
+    return new_input
+
+
 """
 
 Drawing of a boolean expression.
@@ -709,12 +736,23 @@ color_or : string
 
 color_and : string
     The name of the color of AND gates.
+
+notation : string
+    Possible values - prime, nonprime.
+    Differentiating between 2 possible 
+    variable notations.
     
 """
-def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon'):
+
+def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon',
+               notation='case_based'):
+    if notation =='prime':
+        input= prime_to_nonprime(input)
     mode = get_mode(input)
     if mode==Mode.BOOLEAN_MODE:
-      variables=get_the_variabels(input) 
+      variables=get_the_variabels(input)
+      if notation == 'prime':
+          variables=[x.lower() for x in variables]
       output_label=get_output_label(input)
       f_filtered = ''.join(c for c in input if not c.isspace())    
       f=create_implicants(f_filtered,variables)
@@ -729,6 +767,8 @@ def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon'):
     elif mode== Mode.MULTI_OUTPUT:
       output_label=get_output_label(input)
       variables=get_the_variabels(input,multi_output=True)
+      if notation =='prime':
+          variables=[x.lower() for x in variables]
       f=create_implicants_multi_output(input,variables)
       multi_value=False
       multi_output=True
@@ -756,4 +796,5 @@ def save_figure(f,file_name,file_format,dpi=72):
 if __name__ == '__main__':
         
 
-    f= draw_schem(["A+B=F"],color_or = 'red',color_and = 'Blue')
+    f= draw_schem(["a*b+c'=F"],color_or = 'red',color_and = 'Blue',
+                  notation='prime')
