@@ -1,3 +1,14 @@
+'''
+
+Logigram is a Python library for drawing logic diagrams.
+Logic diagrams are used for visualizing Boolean structures.
+LOGIGRAM is a package for visualizing Boolean functions in
+disjunctive normal form (DNF). Resulting diagrams will thus consist of
+disjunctions of conjunctions of literals.
+As inputs and outputs, LOGIGRAM can process either binary or multivalent
+factors.
+
+'''
 
 import SchemDraw
 import SchemDraw.logic as logic
@@ -5,7 +16,7 @@ import SchemDraw.elements as elm
 import re
 from enum import Enum
 
-
+# raw input
 INPUT_PATTERN2 = re.compile('^([^<\= >]+)(<*\=>*(.+))$')
 
 # clean input
@@ -18,7 +29,6 @@ def clean_input(input):
   return parsed_functions
 
 # implicants from input
-
 def create_implicant_string(input):
  inputs=clean_input(input)
  result=set()
@@ -31,7 +41,6 @@ def create_implicant_string(input):
  return '+'.join(result)
 
 # variables
-
 def get_the_variabels(f,multi_output=False,multi_value=False):
   if multi_output:
     result=create_implicant_string(f)
@@ -55,6 +64,7 @@ def get_the_variabels(f,multi_output=False,multi_value=False):
         res_final.add(j.split("{",1)[0])
     return (sorted(list(res_final)))
 
+# output name
 def get_output_label(f):
     functions=clean_input(f)
     res=[]
@@ -65,7 +75,7 @@ def get_output_label(f):
         pass
     return res
 
-
+# multi output > creating functions
 def create_multiple_functions(input):
   functions=clean_input(input)
   result=[]
@@ -165,7 +175,9 @@ def num_of_non_none(arr):
 class Implicants:
 
   def __init__(self,implicant):
-    if isinstance(implicant[0], bool) or isinstance(implicant[0], int) or implicant[0] is None:
+    if(isinstance(implicant[0], bool) or
+       isinstance(implicant[0], int) or
+       implicant[0] is None):
       self.implicant = implicant
       self.outputs = 1
     else:
@@ -323,7 +335,9 @@ class LineWrapper(Implicants):
 
 def print_gates(d,implicants,output_label,color_and,multi_value=False):
   all_gates=[]
-  for indx,i in enumerate(implicants.items() if isinstance(implicants, dict) else zip(implicants, [1]*len(implicants))):
+  for indx, i in enumerate(implicants.items()
+                            if isinstance(implicants, dict)
+                            else zip(implicants, [1] * len(implicants))):
     if(multi_value is False):
       impl=Implicants(i)
     else:
@@ -335,7 +349,9 @@ def print_gates(d,implicants,output_label,color_and,multi_value=False):
           AND_GATE=d.add(impl.implicant_to_gate(),fill=color_and)
           all_gates.append(GateWrapper(AND_GATE,i,multi_value))
       # is not a line >> NOT GATE
-      elif (len(implicants) == 1 and multi_value is False and impl.is_neg_gate()):
+      elif (len(implicants) == 1
+            and multi_value is False
+            and impl.is_neg_gate()):
           Not_gate = d.add(logic.NOT, d='right', fill='mediumpurple')
           LINE = d.add(elm.LINE, d='right', l=d.unit)
           LINE.add_label(output_label, ofst=0.3, align=('left', 'bottom'))
@@ -348,12 +364,15 @@ def print_gates(d,implicants,output_label,color_and,multi_value=False):
             LINE=d.add(elm.LINE,d='right',l=d.unit)
             LINE.add_label(output_label,ofst=0.3,align=('left','bottom'))
             if(multi_value):
-                LINE.add_label('{}'.format( [x for x in i if x is not None][0]),size=7,ofst=-0.3,align=('left','bottom'))
+                LINE.add_label('{}'.format( [x for x in i if x is not None][0]),
+                                      size=7,ofst=-0.3,align=('left','bottom'))
 
     else:
       #gate
       if(impl.is_line() is False):
-        AND_gate=d.add(impl.implicant_to_gate(),d='right',anchor='in1',fill=color_and,
+        AND_gate=d.add(impl.implicant_to_gate(),d='right',
+                                                anchor='in1',
+                                                fill=color_and,
                  xy=[all_gates[-1].get_input(all_gates[-1].nr_inputs())[0],
                      all_gates[-1].get_input(all_gates[-1].nr_inputs())[1]-1.2],
 
@@ -396,13 +415,10 @@ def compare_with_eps(x,y):
 
 
 def initial_lines_printing(d,f,labels, all_gates):
-
   l=len(labels)
-  
   all_lines=[]
   ends=get_ends_line(labels,all_gates)
   for i,line, last_gate in zip(range(len(labels)),labels,reversed(ends)):
-    #rot=[0 if max(len(labels[i]))>1 for i in range(len(labels)),else 90]
     max_len=max([len(labels[i]) for i in range(len(labels))])
     if max_len>1:
       rot=90
@@ -417,7 +433,8 @@ def initial_lines_printing(d,f,labels, all_gates):
                   all_gates[0].get_input(1)[1]+0.5],
               to=[ends[-1][0].get_input(ends[-1][1])[0]-0.5,
                   ends[-1][0].get_input(ends[-1][1])[1]])
-       L.add_label(labels[l-i-1],loc='rgt',ofst=None, align=None, rotation=rot,lblsize=0.04)
+       L.add_label(labels[l-i-1],loc='rgt',ofst=None, align=None,
+                                           rotation=rot,lblsize=0.04)
        all_lines.append(L)
     else:
       L=d.add(elm.LINE,
@@ -425,7 +442,8 @@ def initial_lines_printing(d,f,labels, all_gates):
                   #lftlabel=labels[l-i-1],
                to=[L.start[0]-d.unit*2,
                    last_gate[0].get_input(last_gate[1])[1]])
-      L.add_label(labels[l-i-1],loc='rgt',ofst=None, align=None, rotation=rot,lblsize=0.04)
+      L.add_label(labels[l-i-1],loc='rgt',ofst=None, align=None,
+                                          rotation=rot,lblsize=0.04)
       all_lines.append(L)
   
   #conecting lines and AND GATES
@@ -453,7 +471,8 @@ def set_label_on_orinput(or_gate,f):
       labels.extend([(x,i+1) for x in Implicant.implicant if x is not None])
 
  for i in labels:
-   or_gate.add_label(str(i[0]),loc='in{}'.format(i[1]),size=7,ofst=0.01,align=('left','bottom'))
+   or_gate.add_label(str(i[0]),loc='in{}'.format(i[1]),size=7,
+                                            ofst=0.01,align=('left','bottom'))
 
 
 def or_lines(d,f,all_gates,output_label,color_or,multi_value=False):
@@ -462,7 +481,8 @@ def or_lines(d,f,all_gates,output_label,color_or,multi_value=False):
     if(multi_value):
        gate_or = logic.orgate(inputs=l_implicants)
     else:
-      neg_indexes=[i+1 for i in range(len(all_gates)) if all_gates[i].is_neg_gate()]
+      neg_indexes=[i+1 for i in range(len(all_gates))
+                   if all_gates[i].is_neg_gate()]
       gate_or = logic.orgate(inputs=l_implicants,inputnots=neg_indexes)
     len_half=l_implicants//2
     if (l_implicants%2==1):
@@ -473,9 +493,6 @@ def or_lines(d,f,all_gates,output_label,color_or,multi_value=False):
         set_label_on_orinput(GATE_OR,f)
       Out_line=d.add(elm.LINE, d='right', l=d.unit/4)
       Out_line.add_label(label=output_label,ofst=0.3,align=('left','bottom'))
-
-     
-     
      
      #print the mid line firt
       d.add(elm.LINE,d='right',
@@ -565,7 +582,8 @@ def print_ors(d,inputs,all_gates, labels,color_or):
        neg_indexes.append(out_idx)
      out_idx+=1
    nr_of_inputs=sum(1 for x in all_gates if j in x.get_output_funcs())
-   all_gates_in_idxs = [i for i,gate in enumerate(all_gates) if j in gate.get_output_funcs()]
+   all_gates_in_idxs = [i for i,gate in enumerate(all_gates) if
+                        j in gate.get_output_funcs()]
    if nr_of_inputs == 1:
      if len(neg_indexes) == 1:
        gate_or = logic.NOT
@@ -573,7 +591,8 @@ def print_ors(d,inputs,all_gates, labels,color_or):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], loc='out',ofst=None, align=None, rotation=rot,lblsize=0.04)
+       GATE_OR.add_label(labels[j], loc='out',ofst=None, align=None,
+                                              rotation=rot,lblsize=0.04)
      else:
      # Change this
        gate_or = elm.LINE #logic.orgate(nr_of_inputs,inputnots=neg_indexes)
@@ -581,14 +600,16 @@ def print_ors(d,inputs,all_gates, labels,color_or):
           xy=[all_gates[0].get_output()[0]+j*4*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )]))
-       GATE_OR.add_label(labels[j], loc='rgt',ofst=None, align=None, rotation=rot,lblsize=0.04)
+       GATE_OR.add_label(labels[j], loc='rgt',ofst=None, align=None,
+                                              rotation=rot,lblsize=0.04)
    else:
      gate_or = logic.orgate(nr_of_inputs,inputnots=neg_indexes)
      GATE_OR=d.add(gate_or,d='up',anchor='out',fill=color_or,
           xy=[all_gates[0].get_output()[0]+j*6*d.unit+2,
             (all_gates[0].get_output()[1]+ 6*d.unit
              )])
-     GATE_OR.add_label(labels[j], loc='out',ofst=0.5, align=None, rotation=rot,lblsize=0.04)
+     GATE_OR.add_label(labels[j], loc='out',ofst=0.5, align=None,
+                                            rotation=rot,lblsize=0.04)
    all_ors.append(OrWrapper(GATE_OR, all_gates_in_indxs=all_gates_in_idxs))
   return all_ors
 
@@ -606,18 +627,22 @@ def add_line_after_ands(d,all_ors,all_gates,multi_value):
       in_coords = gate_or.get_input(i+1)
       gate_idx = gate_or.get_all_gates_idx_for_input(i)
       out_coords = all_gates[gate_idx].get_output()
-      Line=d.add(elm.LINE, d='down', xy=in_coords, to=[in_coords[0], out_coords[1]])
+      Line=d.add(elm.LINE, d='down', xy=in_coords, to=[in_coords[0],
+                                                       out_coords[1]])
       if all_gates[gate_idx].is_line() and multi_value:
         label = [x for x in all_gates[gate_idx].implicant if x is not None][0]
-        Line.add_label(str(label),loc='rgt',size=7,ofst=0.1,align=('left','bottom'))
+        Line.add_label(str(label),loc='rgt',size=7,
+                                  ofst=0.1,align=('left','bottom'))
       if in_coords[0] == line_ends[gate_idx]:
-        d.add(elm.LINE, d='right', xy=out_coords, to=[in_coords[0], out_coords[1]])
+        d.add(elm.LINE, d='right', xy=out_coords,
+                        to=[in_coords[0], out_coords[1]])
       else:
         d.add(elm.DOT)
       
 
 
-def draw_boolean_func(f, variables,output_label,multi_value,multi_output,color_or,color_and):
+def draw_boolean_func(f, variables,output_label,multi_value,multi_output,
+                      color_or,color_and):
   d = SchemDraw.Drawing(unit=.5)
   all_gates = print_gates(d, f,output_label,color_and,multi_value)
   initial_lines_printing(d, f, variables, all_gates)
@@ -630,13 +655,12 @@ def draw_boolean_func(f, variables,output_label,multi_value,multi_output,color_o
 
 
 
-PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
-PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)'
+                       '(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
+                       r'(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
 
 
-#PATTERN1=re.compile('^([^=]+=)?(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)$')
-#PATTERN11=re.compile('^(?P<func>([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)(<=>[^<\=>]+)?$')
-#PATTERN22=re.compile('^([^=]+=)?(([A-Z]+\{[0-9]+\})(\*[A-Z]+\{[0-9]+\})*)(<=>[^<\=>]+)?$')
 
 class Mode(Enum):
   BOOLEAN_MODE = 1
@@ -668,7 +692,25 @@ def get_mode(input):
         return Mode.INVALID
 
 
+"""
 
+Drawing of a boolean expression.
+
+Parameters
+
+----------
+
+input : string
+    A boolean function in DNF form in the expected binary or the
+    multivalue format.
+
+color_or : string
+    The name of the color of OR gates.
+
+color_and : string
+    The name of the color of AND gates.
+    
+"""
 def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon'):
     mode = get_mode(input)
     if mode==Mode.BOOLEAN_MODE:
@@ -701,8 +743,9 @@ def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon'):
       
     if not multi_output:
       f.sort(key=num_of_non_none)
-    d=draw_boolean_func(f,variables,output_label,multi_value,multi_output,color_or,color_and)
-    d.draw()
+    d=draw_boolean_func(f,variables,output_label,multi_value,
+                        multi_output,color_or,color_and)
+    d.draw(showframe=False, showplot=True)
     f=d.fig
 
     return f
@@ -713,4 +756,4 @@ def save_figure(f,file_name,file_format,dpi=72):
 if __name__ == '__main__':
         
 
-    f= draw_schem(["A{1}*C{1}+B{2}<=>F"])
+    f= draw_schem(["A+B=F"],color_or = 'red',color_and = 'Blue')
