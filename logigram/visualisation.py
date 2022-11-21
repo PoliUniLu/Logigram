@@ -357,7 +357,7 @@ def print_gates(d,implicants,output_label,color_and,multi_value=False):
       elif (len(implicants) == 1
             and multi_value is False
             and impl.is_neg_gate()):
-          Not_gate = d.add(logic.NOT, d='right', fill='mediumpurple')
+          Not_gate = d.add(logic.NOT, d='right', fill='white')
           LINE = d.add(elm.LINE, d='right', l=d.unit)
           LINE.add_label(output_label, ofst=0.3, align=('left', 'bottom'))
           all_gates.append(LineWrapper(Not_gate, i))
@@ -796,5 +796,5 @@ def save_figure(f,file_name,file_format,dpi=72):
 if __name__ == '__main__':
         
 
-    f= draw_schem(["a*b+c'=F"],color_or = 'red',color_and = 'Blue',
+    f= draw_schem(["a'<=>D"],color_or = 'red',color_and = 'Blue',
                   notation='prime')
