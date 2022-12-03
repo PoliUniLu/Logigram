@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "logigram"
+version = "0.1.1"
+description = ""
+authors = ["Zuzana Sebechlebská <zuzanasebechlebska@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+schemdraw = "0.6.0"
+
+[tool.poetry.group.dev.dependencies]
+parameterized = "^0.8.1"
+pillow = "^9.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
