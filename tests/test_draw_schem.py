@@ -1,28 +1,65 @@
+import sys
+
 import logigram.visualisation as visualisation
 from parameterized import parameterized
+import matplotlib.pyplot as plt
 
 import unittest
-import  filecmp
+import tempfile
+import os
+from PIL import Image,ImageChops
+
+plt.ioff()
+
+TEST_PATH = os.path.dirname(os.path.abspath(__file__))
+GOLDEN_PATH = os.path.join(TEST_PATH, 'images')
+TMP_PATH = tempfile.gettempdir()
+
+TEST_PARAMS = [
+    ("pic1", "F=A"),
+    ("pic2","F=a"),
+    ("pic3", "A*b+a*c*D+E<=>F"),
+    ("pic4", "A*b+B*c*D<=>F"),
+    ("pic5", "A{1}+B{2}<=>F"),
+    ("pic6", "A{1}*B{2}*C{2}+A{1}*D{1}+C{0}<=>F"),
+    ("pic7", ["A*b*C+C*D<=>F1", "A*b*C+d*a<=>F2"]),
+    ("pic8", ["A+b<=>F1", "b<=>F2"]),
+    ("pic9", ["A{1}*B{2}<=>F1", "A{1}*B{2}+A{2}<=>F2"]),
+    ("pic10", ["A{1}*B{2}*C{0}+B{1}*C{1}+D{1}<=>F1", "A{1}*B{2}*C{0}+D{1}<=>F2"])
+]
+
+def golden_path(name):
+    return os.path.join(GOLDEN_PATH, '{}.png'.format(name))
+
+def test_tmp_path(name):
+    return os.path.join(TMP_PATH, '{}.png'.format(name))
+
+def generate_goldens():
+    for name, func in  TEST_PARAMS:
+        p = golden_path(name)
+        print('Generating {}'.format(p))
+        visualisation.draw_schem(func, color_or='white',
+                                       color_and='white',showplot=False).savefig(p, bbox_inches='tight')
 
 class KnownFigures(unittest.TestCase):
-    @parameterized.expand([
-                    ("pic1","F=A","img1.raw"),
-                    ("pic2","F=a","img2.raw"),
-                    ("pic3","F=A*b+a*c*D+E","img3.raw"),
-                    ("pic4","F=A*b+B*c*D","img4.raw"),
-                    ("pic5","F=A{1}+B{2}","img5.raw"),
-                    ("pic6","F=A{1}*B{2}*C{2}+A{1}*D{1}+C{0}","img6.raw"),
-                    ("pic7",["F1=A*b*C+C*D","F2=A*b*C+d*a"],"img7.raw"),
-                    ("pic8",["F1=A+b","F2=b"],"img8.raw"),
-                    ("pic9",["F1=A{1}*B{2}","F2=A{1}*B{2}+A{2}"],"img9.raw"),
-                    ("pic10",["F1=A{1}*B{2}*C{0}+B{1}*C{1}+D{1}","F2=A{1}*B{2}*C{0}+D{1}"],"img10.raw")
+    @parameterized.expand(TEST_PARAMS)
+    def test_sequence(self, name, func):
+        fgolden = golden_path(name)
+        ftest = test_tmp_path(name)
+        visualisation.draw_schem(func, color_or='white',
+                                 color_and='white', showplot=False).savefig(ftest,
+                                                                            bbox_inches='tight')
 
-            ])
-    def test_sequence(self,name,func,expected_image):
-        visualisation.draw_schem(func).savefig("test_{}.raw".format(name),bbox_inches='tight')
-        self.assertTrue(filecmp.cmp("test_{}.raw".format(name),"images/{}".format(expected_image)))
-        
-    
+        img_test = Image.open(ftest).convert('RGB')
+        img_golden = Image.open(fgolden).convert('RGB')
+        equal_content = not ImageChops.difference(img_test, img_golden).getbbox()
+        if not equal_content:
+            ImageChops.difference(img_test, img_golden).save('diff_' + name + '.png')
+        self.assertTrue(equal_content)
 
-if __name__=='__main__':
-    unittest.main()
+
+if __name__ == '__main__':
+    if '--generate-goldens' in sys.argv:
+        generate_goldens()
+    else:
+        unittest.main()

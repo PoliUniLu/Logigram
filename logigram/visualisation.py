@@ -745,7 +745,7 @@ notation : string
 """
 
 def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon',
-               notation='case_based'):
+               notation='case_based', showplot=True):
     if notation =='prime':
         input= prime_to_nonprime(input)
     mode = get_mode(input)
@@ -785,7 +785,7 @@ def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon',
       f.sort(key=num_of_non_none)
     d=draw_boolean_func(f,variables,output_label,multi_value,
                         multi_output,color_or,color_and)
-    d.draw(showframe=False, showplot=True)
+    d.draw(showframe=False, showplot=False)
     f=d.fig
 
     return f
