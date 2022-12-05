@@ -27,14 +27,17 @@ causal structures.
   import LOGIGRAM
   
   # returns a matplotlib figure
-  f = logigram.draw_schem('F=A*B+c*A+b') 
+  f = logigram.draw_schem('A*B+c*A+b<=>F') 
   
   # for multi-output functions
-  f = logigram.draw_schem(['F1=A*B+c*A+b','F2=A*B']) 
+  f = logigram.draw_schem(['A*B+c*A+b<=>F1','A*B<=>F2']) 
   
   # usage with multivalent factors
-  f = logigram.draw_schem('F=A{1}*B{2}+C{0}')
+  f = logigram.draw_schem('A{1}*B{2}+C{0}?<=>F')
   
+  # usage with the lower case prime notations
+  f = logigram.draw_schem('ab+c'a+b'<=>F')
+ 
   # save the figure 
   save_figure("image","svg")
   ```
