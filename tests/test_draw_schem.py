@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import unittest
 import tempfile
 import os
-from PIL import Image,ImageChops
+from PIL import Image,ImageChops, ImageOps
 
 plt.ioff()
 
@@ -31,30 +31,41 @@ TEST_PARAMS = [
 def golden_path(name):
     return os.path.join(GOLDEN_PATH, '{}.png'.format(name))
 
-def test_tmp_path(name):
+def make_tmp_path(name):
     return os.path.join(TMP_PATH, '{}.png'.format(name))
+
+
+def trim(im):
+    return im.crop(ImageOps.invert(im).getbbox())
+
+def func_image(func, p):
+    visualisation.draw_schem(func, color_or='white',
+                             color_and='white', showplot=False).savefig(p,
+                                                                        bbox_inches='tight')
+    im = Image.open(p).convert('RGB')
+    return trim(im)
 
 def generate_goldens():
     for name, func in  TEST_PARAMS:
         p = golden_path(name)
         print('Generating {}'.format(p))
-        visualisation.draw_schem(func, color_or='white',
-                                       color_and='white',showplot=False).savefig(p, bbox_inches='tight')
+        func_image(func, p).save(p)
 
 class KnownFigures(unittest.TestCase):
     @parameterized.expand(TEST_PARAMS)
     def test_sequence(self, name, func):
         fgolden = golden_path(name)
-        ftest = test_tmp_path(name)
+        ftest = make_tmp_path(name)
         visualisation.draw_schem(func, color_or='white',
                                  color_and='white', showplot=False).savefig(ftest,
                                                                             bbox_inches='tight')
 
-        img_test = Image.open(ftest).convert('RGB')
+        img_test = func_image(func, ftest)
         img_golden = Image.open(fgolden).convert('RGB')
         equal_content = not ImageChops.difference(img_test, img_golden).getbbox()
         if not equal_content:
             ImageChops.difference(img_test, img_golden).save('diff_' + name + '.png')
+        img_test.save('test_' + name + '.png')
         self.assertTrue(equal_content)
 
 
