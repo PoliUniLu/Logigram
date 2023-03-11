@@ -52,3 +52,21 @@ causal structures.
 
 ## License
 Logigram is licensed under a GNU GPLv3. 
+
+## Contribution 
+
+We welcome contributions from the community.
+We encourage and recommend that feedback, bug reports, and feature requests should first be documented as an [Issue](https://github.com/PoliUniLu/cora/issues) on GitHub.
+
+### Pull requests
+To set up a development environment, use [Poetry](https://python-poetry.org/).
+```console
+pip install poetry
+poetry install
+```
+Test the code by running
+```console
+poetry run pytest
+```
+Pull requests are welcome. Note that although the current codebase doesn't have entirely 
+consistent code style the new code should be PEP-8 compliant.
