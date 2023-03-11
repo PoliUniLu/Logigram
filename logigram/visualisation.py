@@ -43,7 +43,7 @@ def create_implicant_string(input):
       result.update( INPUT_PATTERN2.match(f).group(1).split("+"))
    else:
     pass
- return '+'.join(result)
+ return '+'.join(sorted(result))
 
 # variables
 def get_the_variabels(f,multi_output=False,multi_value=False):
@@ -782,7 +782,7 @@ def draw_schem(input,color_or = 'lightblue',color_and = 'lemonchiffon',
       raise RuntimeError('Unsupported input entered.')
       
     if not multi_output:
-      f.sort(key=num_of_non_none)
+        f.sort(key=num_of_non_none)
     d=draw_boolean_func(f,variables,output_label,multi_value,
                         multi_output,color_or,color_and)
     d.draw(showframe=False, showplot=False)
