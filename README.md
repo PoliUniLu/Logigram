@@ -27,31 +27,35 @@ causal structures.
 ## Usage
  
  ```python
-  import LOGIGRAM
+  import logigram
   
-  # returns a matplotlib figure
-  f = logigram.draw_schem('A*B+c*A+b<=>F') 
+  # binary function, case-based notation
+  f= logigram.draw_schem(['A*B+c*A+b<=>F'],color_or = '#aed49c',color_and = '#f3aea0',
+                  notation='case')
   
-  # for multi-output functions
-  f = logigram.draw_schem(['A*B+c*A+b<=>F1','A*B<=>F2']) 
+  # binary function, lower case prime notations
+  f= logigram.draw_schem(["a*b+c'*a+b'<=>F"],color_or = '#f4e4fc',color_and = '#a7b2e6',
+                  notation='prime')
   
-  # usage with multivalent factors
-  f = logigram.draw_schem('A{1}*B{2}+C{0}<=>F')
-  
-  # usage with the lower case prime notations
-  f = logigram.draw_schem('a*b+c'*a+b'<=>F')
- 
+  # multi-value function 
+  f = logigram.draw_schem(['A{1}*B{2}+C{0}<=>F'],color_or = 'lightblue',color_and = 'lemonchiffon',
+                          notation='case')
+  # multiple functions/outputs
+  f = logigram.draw_schem(['A{1}*B{2}+A{2}<=>F1','A{1}+C{1}*B{2}<=>F2'], color_or='#f17bd0',
+                            color_and='#7dbfc5',
+                            notation='case')
+
   # save the figure 
-  save_figure("image","svg")
+  logigram.save_figure("image","svg")
   ```
 ## Visuals
-  ![Ex. of a signle boolean function in a CDNF](examples/image2.svg)
+  ![Ex. of a signle boolean function in a CDNF](examples/ex1.svg)
   
-  ![Ex. of the two boolean functions in a CDNF](examples/image1.svg)
+  ![Ex. of the two boolean functions in a CDNF](examples/ex2.svg)
   
-  ![Ex. of a multi-value function in a CDNF](examples/image3.svg)
+  ![Ex. of a multi-value function in a CDNF](examples/ex3.svg)
   
-  ![Ex. of the two multi-value fucntions i a CDNF](examples/image4.svg)
+  ![Ex. of the two multi-value fucntions i a CDNF](examples/ex4.svg)
 
 ## License
 Logigram is licensed under a GNU GPLv3. 
