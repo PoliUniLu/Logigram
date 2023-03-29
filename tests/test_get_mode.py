@@ -21,4 +21,4 @@ class KnownFigures(unittest.TestCase):
                            (["A{1}+C{1}<=>F","A{1}+B{2}<=>Y"],visualisation.Mode.MUTLI_VALUE_MULTI_OUT),
                            (["A*b"],visualisation.Mode.INVALID)])
     def test_get_mode(self, input, expected_mode):
-        self.assertEqual(visualisation.get_mode(input), expected_mode)
+        self.assertEqual(visualisation._get_mode(input), expected_mode)

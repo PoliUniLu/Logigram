@@ -11,5 +11,5 @@ class KnownFigures(unittest.TestCase):
                            ("A=F",False,False,["A"])
     ])
     def test_get_variables(self, input_f,multi_output,multi_value, variables):
-        self.assertEqual(visualisation.get_the_variabels(input_f,multi_output,
-                                                        multi_value), variables)
+        self.assertEqual(visualisation._get_the_variabels(input_f, multi_output,
+                                                          multi_value), variables)
