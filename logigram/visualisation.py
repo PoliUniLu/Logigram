@@ -273,7 +273,7 @@ class GateWrapper(Implicants):
   
   def _set_labels(self):
     for i, v in enumerate(filter(lambda x: x is not None, self.implicant)):
-      self.gate.add_label(str(v), loc='in{}'.format(i + 1), size=9, ofst=0.01)
+      self.gate.add_label(str(v), loc='in{}'.format(i + 1), size=8, ofst=0.03)
   
   def _map_label_to_input_index(self, label_index):
     if self.implicant[label_index] is None:
@@ -630,8 +630,8 @@ def _add_line_after_ands(d, all_ors, all_gates, multi_value):
                                                        out_coords[1]])
       if all_gates[gate_idx]._is_line() and multi_value:
         label = [x for x in all_gates[gate_idx].implicant if x is not None][0]
-        Line.add_label(str(label), loc='top', size=9,
-                        ofst=0.07, align=('right','baseline'))
+        Line.add_label(str(label)+' ', loc='rgt', size=9,
+                        ofst=-0.3, align=('right','baseline'))
       if in_coords[0] == line_ends[gate_idx]:
         d.add(elm.LINE, d='right', xy=out_coords,
                         to=[in_coords[0], out_coords[1]])
@@ -802,7 +802,7 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(['A{1}*B{2}+A{2}<=>F1','A{1}<=>F2'], color_or='#f17bd0',
+    f = draw_schem(['A{1}*B{2}+A{2} +C{6}+B{1}<=>F1','A{1}<=>F2'], color_or='#f17bd0',
                             color_and='#7dbfc5',
                             notation='case')
     save_figure(f,'ex4','svg',dpi=72)
