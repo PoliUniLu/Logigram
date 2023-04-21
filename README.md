@@ -1,6 +1,8 @@
 # Logigram
 [![Tests](https://github.com/PoliUniLu/logigram/workflows/Tests/badge.svg)](https://github.com/PoliUniLu/logigram/actions?workflow=Tests)
 [![codecov](https://codecov.io/github/PoliUniLu/logigram/branch/master/graph/badge.svg?token=36V7QBSJI3)](https://codecov.io/github/PoliUniLu/logigram)
+[![DOI](https://zenodo.org/badge/306043142.svg)](https://zenodo.org/badge/latestdoi/306043142)
+
 
 Logigram is a Python library for drawing logic diagrams.
 
