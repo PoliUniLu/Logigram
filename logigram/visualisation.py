@@ -318,7 +318,7 @@ class LineWrapper(Implicants):
 
   def _get_input(self, index):
     if (index != 1):
-      raise RuntimeError('Requested ')
+      raise RuntimeError('Requested')
     return self.line.start
   
   def _get_output(self):
@@ -486,7 +486,6 @@ def _initial_lines_printing(d, implicants, variables, all_gates):
     else:
       L=d.add(elm.LINE,
               xy=[L.start[0]-d.unit*2,L.start[1]],
-              #lftlabel=labels[l-i-1],
               to=[L.start[0] - d.unit * 2,
                   last_gate[0]._get_input(last_gate[1])[1]])
       L.add_label(variables[l - i - 1], loc='rgt', ofst=None, align=None,
@@ -952,9 +951,6 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    #f = draw_schem(['A{1}*B{2}+A{2} +C{6}+B{1}<=>F1','A{1}<=>F2'], color_or='#f17bd0',
-                           # color_and='#7dbfc5',
-                            #notation='case')
     f = draw_schem(['A{1}*B{2}+C{1}<=>F2'])
 
     save_figure(f,'ex5','svg',dpi=72)
