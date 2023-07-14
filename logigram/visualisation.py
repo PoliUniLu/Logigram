@@ -792,7 +792,7 @@ def _draw_boolean_func(implicants, variables, output_label, multi_value, multi_o
 
 
 
-PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)((\+|\*)([A-Z]+|[a-z]+))*)'
+PATTERN11 = re.compile('^(([A-Z]+|[a-z]+)([0-9])*((\+|\*)([A-Z]+|[a-z]+)([0-9])*)*)'
                        '(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
 PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
                        r'(<*\=>*[A-Za-z0-9-\{-\}-,]+)$')
@@ -951,6 +951,6 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(['A{1}*B{2}+C{1}<=>F2'])
-
+    #f = draw_schem(['A{1}*B{2}+C{1}<=>F2'])
+    f = draw_schem(['X1*x5 + x1*x3 + X2*x3 <=> Out'])
     save_figure(f,'ex5','svg',dpi=72)
