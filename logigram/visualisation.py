@@ -793,15 +793,17 @@ def _draw_boolean_func(implicants, variables, output_label, multi_value, multi_o
 
 
 
-PATTERN1 = re.compile('^(([A-Z]+|[a-z]+([0-9-\_])*)+((\+|\*)([A-Z]+|[a-z]+)'
+PATTERN1 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
                        '([0-9-\_])*)*)(<*\=>[A-Za-z0-9-\{-\}-,]+)$')
 
 
-PATTERN11 = re.compile('^(([A-Z]+|[a-z]+([0-9-\_])*)+((\+|\*)([A-Z]+|[a-z]+)'
+PATTERN11 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
                        '([0-9-\_])*)*)(\=[A-Za-z0-9-\{-\}-,]+)$')
 
-PATTERN111 = re.compile('^(([A-Z]+|[a-z]+([0-9-\_])*)+((\+|\*)([A-Z]+|[a-z]+)'
+PATTERN111 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
                       '([0-9-\_])*)*)(<*\->[A-Za-z0-9-\{-\}-,]+)$')
+
+pattern_group1 = [PATTERN1,PATTERN11,PATTERN111]
 
 PATTERN2 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
                        r'(<*\=>[A-Za-z0-9-\{-\}-,]+)$')
@@ -812,6 +814,8 @@ PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
 PATTERN222 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
                        r'(<*\->[A-Za-z0-9-\{-\}-,]+)$')
 
+pattern_group2 = [PATTERN2,PATTERN22,PATTERN222]
+
 class Mode(Enum):
   BOOLEAN_MODE = 1
   MULTI_VALUE_MODE = 2
@@ -819,7 +823,8 @@ class Mode(Enum):
   MULTI_OUTPUT = 4
   MUTLI_VALUE_MULTI_OUT =5
 
-
+def do_all_strings_match_patterns(l,pattern_group):
+    return all(any(p.match(s) for p in pattern_group) for s in l)
 def _get_mode(input):
     '''
     Parameters:
@@ -838,18 +843,13 @@ def _get_mode(input):
         new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in input]
     res=[x for x in new_inputs if len(x)!=0]
 
-    if(all(PATTERN1.match(s) is not None for s in res) or
-       all(PATTERN11.match(s) is not None for s in res) or
-       all(PATTERN111.match(s) is not None for s in res)):
-
+    if do_all_strings_match_patterns(res,pattern_group1):
         if len(res)>1:
             return Mode.MULTI_OUTPUT
         else:
             return Mode.BOOLEAN_MODE
 
-    elif(all(PATTERN2.match(s) is not None for s in res) or
-         all(PATTERN22.match(s) is not None for s in res) or
-         all(PATTERN222.match(s) is not None for s in res)):
+    elif do_all_strings_match_patterns(res,pattern_group2):
         if len(res)>1:
           return  Mode.MUTLI_VALUE_MULTI_OUT
         else:
@@ -970,5 +970,5 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(['X1*x5 + x1*x3 + X2*x3 -> Out'])
-    save_figure(f,'ex5','svg',dpi=72)
+    f = draw_schem(["1 => E{1}",'p+o+d<=>A{1}'])
+    save_figure(f,'ex5','png',dpi=72)
