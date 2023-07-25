@@ -805,13 +805,13 @@ PATTERN111 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
 
 pattern_group1 = [PATTERN1,PATTERN11,PATTERN111]
 
-PATTERN2 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
+PATTERN2 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
                        r'(<*\=>[A-Za-z0-9-\{-\}-,]+)$')
 
-PATTERN22 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
+PATTERN22 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
                        r'(\=[A-Za-z0-9-\{-\}-,]+)$')
 
-PATTERN222 = re.compile(r'^(([A-Z]+\{[0-9]+\})((\+|\*)([A-Z]+\{[0-9]+\}))*)'
+PATTERN222 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
                        r'(<*\->[A-Za-z0-9-\{-\}-,]+)$')
 
 pattern_group2 = [PATTERN2,PATTERN22,PATTERN222]
