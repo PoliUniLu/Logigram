@@ -32,7 +32,8 @@ def _clean_input(input):
      new_inputs=[''.join(filter(lambda x: not x.isspace() ,y)) for y in input]
   parsed_functions=[x for x in new_inputs if len(x)!=0]
   return parsed_functions
-
+def _consisency_letter_check(minterm):
+    return minterm.islower() or minterm.isupper()
 # implicants from input
 def _create_implicant_string(input):
  inputs=_clean_input(input)
@@ -43,6 +44,14 @@ def _create_implicant_string(input):
       result.update( INPUT_PATTERN2.match(f).group(1).split("+"))
    else:
     pass
+ for x in result:
+     #trivial pictures
+     if x == '1' or x == '0':
+         pass
+     else:
+        new_x = x.split('*')
+        if not all(_consisency_letter_check(s) for s in new_x) :
+             raise RuntimeError("Invalid term in the input expression!")
  return '+'.join(sorted(result))
 
 # variables
@@ -61,12 +70,13 @@ def _get_the_variabels(f, multi_output=False, multi_value=False):
   if not multi_value:
     for i in res:
       res_final.update(c.upper() for c in (i.split("*")))
-    return sorted(list(res_final))  
+    return sorted(list(res_final))
   
   else:
     for i in res:
       for j in (i.split("*")):
         res_final.add(j.split("{",1)[0])
+
     return (sorted(list(res_final)))
 
 # output name
@@ -793,26 +803,31 @@ def _draw_boolean_func(implicants, variables, output_label, multi_value, multi_o
 
 
 
-PATTERN1 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
-                       '([0-9-\_])*)*)(<*\=>[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN1 = re.compile('^([^\+\*\{\}\=\<\>\-]+)((\+|\*)'
+                      '([^\+\*\{\}\=\<\>\-]+))*(<*\=>[^\+\*\=\<\>\-]+)$')
 
 
-PATTERN11 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
-                       '([0-9-\_])*)*)(\=[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN11 = re.compile('^([^\+\*\{\}\=\<\>\-]+)((\+|\*)'
+                      '([^\+\*\{\}\=\<\>\-]+))*(\=[^\+\*\=\<\>\-]+)$')
 
-PATTERN111 = re.compile('^(([A-Za-z0-9-\_])+((\+|\*)([A-Z]+|[a-z]+)'
-                      '([0-9-\_])*)*)(<*\->[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN111 = re.compile('^([^\+\*\{\}\=\<\>\-]+)((\+|\*)'
+                      '([^\+\*\{\}\=\<\>\-]+))*(<*\->[^\+\*\=\<\>\-]+)$')
+
 
 pattern_group1 = [PATTERN1,PATTERN11,PATTERN111]
 
-PATTERN2 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
-                       r'(<*\=>[A-Za-z0-9-\{-\}-,]+)$')
+#multi - value scenarios
+PATTERN2 = re.compile(r'^([^\+\*\{\}\=\<\>\-]+\{[0-9]+\})((\+|\*)'
+                      r'([^\+\*\{\}\=\<\>\-]+\{[0-9]+\}))*'
+                      r'(<*\=>[^\+\*\=\<\>\-]+)$')
 
-PATTERN22 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
-                       r'(\=[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN22 = re.compile(r'^([^\+\*\{\}\=\<\>\-]+\{[0-9]+\})((\+|\*)'
+                       r'([^\+\*\{\}\=\<\>\-]+\{[0-9]+\}))*'
+                       r'(\=[^\+\*\=\<\>\-]+)$')
 
-PATTERN222 = re.compile(r'^(([A-Za-z0-9-\_]+\{[0-9]+\})((\+|\*)([A-Za-z0-9-\_]+\{[0-9]+\}))*)'
-                       r'(<*\->[A-Za-z0-9-\{-\}-,]+)$')
+PATTERN222 = re.compile(r'^([^\+\*\{\}\=\<\>\-]+\{[0-9]+\})((\+|\*)'
+                        r'([^\+\*\{\}\=\<\>\-]+\{[0-9]+\}))*'
+                        r'(<*\->[^\+\*\=\<\>\-]+)$')
 
 pattern_group2 = [PATTERN2,PATTERN22,PATTERN222]
 
@@ -842,8 +857,8 @@ def _get_mode(input):
     else:
         new_inputs=[''.join(filter(lambda x: not x.isspace(),y)) for y in input]
     res=[x for x in new_inputs if len(x)!=0]
-
     if do_all_strings_match_patterns(res,pattern_group1):
+
         if len(res)>1:
             return Mode.MULTI_OUTPUT
         else:
@@ -970,5 +985,5 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(["1 => E{1}",'p+o+d<=>A{1}'])
+    f = draw_schem(["A*B+c*A<=>f"])
     save_figure(f,'ex5','png',dpi=72)

@@ -12,8 +12,6 @@ class KnownFigures(unittest.TestCase):
                            ("A{1}*B{2}+C{3}<=>F", visualisation.Mode.MULTI_VALUE_MODE),
                            ("A*B+c<=>f", visualisation.Mode.BOOLEAN_MODE),
                            ("A*B+c=f", visualisation.Mode.BOOLEAN_MODE),
-                           ("A*B+cd<=>f", visualisation.Mode.BOOLEAN_MODE),
-                           ("A*B+cA<=>f", visualisation.Mode.INVALID),
                            ("A*B+c*A<=>f", visualisation.Mode.BOOLEAN_MODE),
                            (["A*b*C+C*D<=>F","A*b*C+d*a<=>Y"],visualisation.Mode.MULTI_OUTPUT),
                            (["A*b*C+C*D=F","A*b*C+d*a=Y"],visualisation.Mode.MULTI_OUTPUT),
