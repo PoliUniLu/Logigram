@@ -878,16 +878,23 @@ def _replace_quote(match):
     text = match.group()
     if '\'' in text:
 
-        return text.replace('\'', '')
+        return text.replace('\'', '').lower()
     else:
         return text.upper()
 
 
 def _prime_to_nonprime(input):
-    regex = re.compile('([a-z-0-9]+\'*)')
+    regex = re.compile('([^A-Z-\=\-\>\<\{\}]+\'*)')
     new_input = []
     for elm in input:
-        onset, offset = elm.split('=')
+        if '=' in elm:
+            onset, offset = elm.split('=')
+        if '-' in elm:
+            onset, offset = elm.split('-')
+        else:
+            raise RuntimeError('Invalid input entered!')
+        if (any(elm_o.isupper() for elm_o in onset)):
+            raise RuntimeError('Invalid input entered!')
         if ('\'' not in elm):
             new_onset = onset.upper()
         else:
@@ -985,5 +992,5 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(["A*B+c*A<=>f"])
+    f = draw_schem(["a'+a^$#&1'*a+d->F"],notation='prime')
     save_figure(f,'ex5','png',dpi=72)
