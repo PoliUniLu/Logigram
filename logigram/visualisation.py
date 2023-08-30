@@ -889,17 +889,21 @@ def _prime_to_nonprime(input):
     for elm in input:
         if '=' in elm:
             onset, offset = elm.split('=')
-        if '-' in elm:
+        elif '-' in elm:
             onset, offset = elm.split('-')
         else:
             raise RuntimeError('Invalid input entered!')
         if (any(elm_o.isupper() for elm_o in onset)):
             raise RuntimeError('Invalid input entered!')
-        if ('\'' not in elm):
-            new_onset = onset.upper()
-        else:
-            new_onset = regex.sub(_replace_quote, onset)
-        new_input.append(new_onset+"="+offset)
+        elms_onset = onset.split("+")
+        new_onset_elms = []
+        for e in elms_onset:
+            if ('\'' not in e):
+
+                new_onset_elms.append(e.upper())
+            else:
+                new_onset_elms.append(regex.sub(_replace_quote, e))
+        new_input.append('+'.join(new_onset_elms)+"="+offset)
     return new_input
 
 
@@ -992,5 +996,5 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(["a'+a^$#&1'*a+d->F"],notation='prime')
+    f = draw_schem(["b+a'=>y"],notation='prime')
     save_figure(f,'ex5','png',dpi=72)
