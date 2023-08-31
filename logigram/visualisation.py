@@ -897,12 +897,21 @@ def _prime_to_nonprime(input):
             raise RuntimeError('Invalid input entered!')
         elms_onset = onset.split("+")
         new_onset_elms = []
-        for e in elms_onset:
-            if ('\'' not in e):
 
-                new_onset_elms.append(e.upper())
-            else:
-                new_onset_elms.append(regex.sub(_replace_quote, e))
+        for e in elms_onset:
+            one_implicant = e.split('*')
+            new_implicant = []
+            for literal in one_implicant:
+
+
+                if ('\'' not in literal):
+                    new_implicant.append(literal.upper())
+
+                else:
+                    new_implicant.append(regex.sub(_replace_quote, literal))
+            temp ='*'.join(new_implicant)
+            new_onset_elms.append(temp)
+
         new_input.append('+'.join(new_onset_elms)+"="+offset)
     return new_input
 
@@ -996,5 +1005,5 @@ def save_figure(f,file_name,file_format,dpi=72):
     f.savefig(file_name+"."+file_format,bbox_inches='tight',dpi=dpi)
 
 if __name__ == '__main__':
-    f = draw_schem(["b+a'=>y"],notation='prime')
-    save_figure(f,'ex5','png',dpi=72)
+    f = draw_schem(["c*w*s*g'*r' + c'*w'*s*r'  <=> dep","c'*i*w'*g*r' + c*i'*w*g*r  <=> schiz"],notation='prime',color_or = '#e6ffe6',color_and = '#ffe6e6')
+    save_figure(f,'ex4','pdf',dpi=72)
